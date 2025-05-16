@@ -142,7 +142,8 @@
             object-fit: cover;
         }
 
-        .gallery-item:first-child img {
+        .gallery-item:first-child img,
+        .gallery-item:nth-child(2) img {
             object-fit: contain;
         }
 
@@ -329,11 +330,11 @@
                 height: 250px;
             }
 
-            .gallery-item:first-child img {
+            .gallery-item:first-child img,
+            .gallery-item:nth-child(2) img {
                 object-fit: contain;
             }
-
-            .gallery-item:not(:first-child) img {
+            .gallery-item:not(:first-child):not(:nth-child(2)) img {
                 object-fit: cover;
             }
 
@@ -377,8 +378,12 @@
 
             <div class="gallery" id="gallery">
                 <div class="gallery-item">
-                    <img src="wemmy1.png" alt="Otunba Wemmy speaking at community event">
+                    <img src="wemmy1.png" alt="Otunba Wemmy">
                     <div class="caption">Otunba Wemmy Osude</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="./wemmy2.jpg" alt="Otunba Wemmy">
+                    <div class="caption">Happy Birthday to Otunba Wemmy Osude</div>
                 </div>
                 <div class="gallery-item">
                     <img src="wemmy&king.jpg" alt="Birthday Memory 2">
