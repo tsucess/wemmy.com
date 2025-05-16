@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday!</title>
+    <meta name="description" content="Birthday celebration for Otunba Wemmy Osude">
+    <link rel="preload" href="birthday-song.mp3" as="audio">
+    <link rel="preload" href="wemmy1.jpg" as="image">
+    <link rel="icon" type="image/jpg" href="wemmy1.jpg"/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+            color: #fff;
+            text-align: center;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            padding: 50px 20px 20px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        p {
+            font-size: 1.3rem;
+            margin: 0.5rem 0 2rem;
+        }
+
+        /* Button styles */
+        .action-button {
+            padding: 12px 25px;
+            background-color: #ffd700;
+            color: #333;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+        }
+
+        .action-button:hover {
+            background-color: #ffec80;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .action-button.secondary {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .action-button.secondary:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Popup styles for both popups */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #3a1c71, #d76d77);
+            color: #fff;
+            border: 3px solid #ffd700;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            max-width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .tribute-popup {
+            width: 600px;
+            max-width: 90%;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Enhanced gallery styles */
+        .gallery-container {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border: 5px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .gallery {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .gallery-item {
+            position: relative;
+            min-width: 100%;
+            height: 350px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item:first-child img {
+            object-fit: contain;
+        }
+
+        .caption {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .caption {
+            transform: translateY(0);
+        }
+
+        .gallery-nav {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .gallery-nav button,
+        .arrow {
+            background: #ffd700;
+            /* Gold */
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            /* border-radius: 30px; */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .gallery-nav button:hover,
+        .arrow:hover {
+            background: #ffec80;
+        }
+
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: #ffd700;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.3);
+            color: #333;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 10;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .arrow:hover {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .arrow.prev {
+            left: 0;
+        }
+
+        .arrow.next {
+            right: 0;
+        }
+
+        audio {
+            margin-top: 20px;
+        }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(60deg, #3a1c71, #3a1c71, #ffaf7b);
+            color: #fff;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1rem;
+        }
+
+        footer .social-icons {
+            margin-top: 10px;
+        }
+
+        footer .social-icons a {
+            color: #fff;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        footer .social-icons a:hover {
+            color: #ffd700;
+            transform: translateY(-3px);
+        }
+
+        /* Add responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .action-button {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+                margin: 5px;
+                display: inline-block;
+            }
+
+            header {
+                padding: 30px 10px 15px;
+            }
+
+            header p {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+
+            /* Remove the <br> between buttons on mobile */
+            header br {
+                display: none;
+            }
+
+            /* Create a container for buttons */
+            header .button-container {
+                display: flex;
+                justify-content: center;
+                flex-wrap: nowrap;
+                gap: 10px;
+            }
+
+            .gallery-container {
+                max-width: 95%;
+                margin: 20px auto;
+            }
+
+            .gallery-item {
+                height: 250px;
+            }
+
+            .gallery-item:first-child img {
+                object-fit: contain;
+            }
+
+            .gallery-item:not(:first-child) img {
+                object-fit: cover;
+            }
+
+            .caption {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+
+            .arrow {
+                width: 30px;
+                font-size: 1rem;
+            }
+
+            .popup {
+                max-width: 95% !important;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-content">
+        <header>
+            <h1>🎉 Happy Birthday Sir!</h1>
+            <p>To a Beacon in the Heart of the Community, Wishing you joy, laughter, and a day filled with love 💖</p>
+            <div class="button-container">
+                <!-- <button class="action-button" onclick="showPopup('surprise-popup')">Click for a Surprise</button> -->
+                <button class="action-button secondary" onclick="showPopup('tribute-popup')">Read Birthday Tribute</button>
+                <button class="action-button" id="play-music" onclick="playBackgroundMusic()">Play</button>
+            </div>
+            <audio id="background-music" loop>
+                <source src="media/Congratulations__Happy_Birthday_128k.mp3" type="audio/mp3">
+                Your browser does not support the audio element.
+            </audio>
+        </header>
+
+        <div class="gallery-container">
+            <div class="arrow prev" onclick="moveSlide(-1)">❮</div>
+            <div class="arrow next" onclick="moveSlide(1)">❯</div>
+
+            <div class="gallery" id="gallery">
+                <div class="gallery-item">
+                    <img src="wemmy1.png" alt="Otunba Wemmy speaking at community event">
+                    <div class="caption">Otunba Wemmy Osude</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="wemmy&king.jpg" alt="Birthday Memory 2">
+                    <div class="caption">Special community gathering</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="leaders.jpg" alt="Birthday Memory 3">
+                    <div class="caption">Leadership in action</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="leaderscontribute.jpg" alt="Birthday Memory 4">
+                    <div class="caption">Royal Wisdom and Civic Vision Aligned for Community Growth.</div>
+                </div>
+            </div>
+
+            <div class="dots-container" id="dots"></div>
+        </div>
+
+        <footer>
+            <p>Made with ❤️ for a special birthday celebration.</p>
+            <p>&copy; 2025 TAOFEEQ OGUNSANYA</p>
+            <!-- <p>&copy; 2023 Ilishan Community Development Association</p> -->
+        </footer>
+    </div>
+
+    <!-- Overlay for both popups -->
+    <div class="overlay" id="overlay" onclick="closePopups()"></div>
+
+    <!-- Surprise popup -->
+    <div class="popup" id="surprise-popup">
+        <h2>🎂 Surprise! 🎁</h2>
+        <p>You are special, and today is all about celebrating YOU! 🥳</p>
+        <button class="action-button" onclick="closePopups()">Close</button>
+    </div>
+
+    <!-- Tribute popup (formerly fade-in-section) -->
+    <div class="popup tribute-popup" id="tribute-popup">
+        <h2 style="font-size: 2rem; margin-bottom: 10px; color: #ffd700;">🎈 Happy Birthday to Otunba Wemmy Osude</h2>
+        <h4 style="margin-top: 0; font-weight: normal;">Chairman, Ilishan Community Development Association</h4>
+        <p style="font-size: 1.1rem; line-height: 1.6;">
+            Today, we celebrate a visionary leader, a dedicated community builder, and a true patriot — Otunba Wemmy
+            Osude. As Chairman of the Ilishan Community Development Association, he has consistently championed
+            progress, unity, and inclusive growth within the Ilishan community.
+        </p>
+        <p style="font-size: 1.1rem; line-height: 1.6;">
+            His unwavering commitment to grassroots development, paired with his exceptional leadership and integrity,
+            continues to inspire all who work alongside him. Under his guidance, the community has achieved remarkable
+            progress in infrastructure, education, and civic engagement.
+        </p>
+        <p style="font-size: 1.1rem; line-height: 1.6;">
+            On this special day, we honor not just his accomplishments but the values he embodies: service, excellence,
+            and humility.
+        </p>
+        <p style="font-size: 1.1rem; font-weight: bold;">Wishing Otunba Wemmy Osude a joyful birthday and many more
+            years of impact and fulfillment.</p>
+        <!-- <p style="font-style: italic;">— Signed: Osonuga Abimbola</p> -->
+        <button class="action-button" onclick="closePopups()">Close</button>
+    </div>
+
+    <!-- Confetti Script CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+
+
+        setInterval(() => {
+            // Confetti burst for both popups
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+        }, 2000);
+
+
+
+        function playBackgroundMusic() {
+            const music = document.getElementById('background-music');
+            if (music.paused) {
+                music.play();
+                document.getElementById('play-music').innerText = 'Pause';
+            } else {
+                music.pause();
+                document.getElementById('play-music').innerText = 'Play';
+            }
+        }
+
+
+        function showPopup(popupId) {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById(popupId).style.display = 'block';
+
+            // Confetti burst for both popups
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function closePopups() {
+            document.getElementById('overlay').style.display = 'none';
+            document.querySelectorAll('.popup').forEach(popup => {
+                popup.style.display = 'none';
+            });
+        }
+
+        const faders = document.querySelectorAll('.fade-in-section');
+
+        const appearOnScroll = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15
+        });
+
+        faders.forEach(section => {
+            appearOnScroll.observe(section);
+        });
+
+        // Add birthday countdown timer
+        function updateCountdown() {
+            const now = new Date();
+            const birthdayTime = new Date(); // Set actual birthday date/time
+            // Timer logic...
+            document.getElementById('countdown').textContent = timeLeft;
+        }
+
+        let currentSlide = 0;
+        const totalSlides = document.querySelectorAll('.gallery-item').length;
+
+        // Create dots
+        function createDots() {
+            const dotsContainer = document.getElementById('dots');
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            updateSlider();
+        }
+
+        function moveSlide(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateSlider();
+        }
+
+        function updateSlider() {
+            const gallery = document.getElementById('gallery');
+            gallery.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            // Update dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // Auto slide with pause on hover
+        let slideInterval;
+
+        function startAutoSlide() {
+            slideInterval = setInterval(() => {
+                moveSlide(1);
+            }, 4000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            createDots();
+            startAutoSlide();
+
+            // Pause on hover
+            const container = document.querySelector('.gallery-container');
+            container.addEventListener('mouseenter', stopAutoSlide);
+            container.addEventListener('mouseleave', startAutoSlide);
+
+            // Swipe support for mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            container.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            container.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                if (touchEndX < touchStartX - 50) {
+                    moveSlide(1); // Swipe left
+                } else if (touchEndX > touchStartX + 50) {
+                    moveSlide(-1); // Swipe right
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
